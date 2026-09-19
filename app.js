@@ -1089,3 +1089,82 @@ async function triggerEmergencyEvacuationModal() {
     showToast("Emergency Broadcast Error", "Could not reach backend.", "error");
   }
 }
+
+function triggerSimulation() {
+  showToast("⚡ SIMULATION ACTIVATED", "Nag River Flash Flood & Sitabuldi Traffic Detour initiated.", "warning");
+
+  if (overviewMap) {
+    const disasterMarkers = [
+      { name: "🚨 CRITICAL FLOOD: Nag River Kamptee Bridge", lat: 21.2200, lng: 79.1100, color: "#ef4444", text: "Water level spiked by +1.4m. Dewatering Unit #1 Dispatched." },
+      { name: "⚠️ TRAFFIC BLOCK: Sitabuldi Market Gridlock", lat: 21.1470, lng: 79.0820, color: "#f59e0b", text: "Culvert overflow. Detour routed to Outer Ring Road." },
+      { name: "🏥 VECTOR HAZARD: Hingna MIDC Sector 12", lat: 21.1100, lng: 78.9800, color: "#7c3aed", text: "Stagnant industrial runoff. Mobile Fogging Unit #2 Assigned." }
+    ];
+
+    disasterMarkers.forEach(dm => {
+      const marker = L.circleMarker([dm.lat, dm.lng], {
+        radius: 12,
+        fillColor: dm.color,
+        color: '#ffffff',
+        weight: 3,
+        fillOpacity: 0.95
+      }).addTo(overviewMap);
+
+      marker.bindPopup(`
+        <div style="font-family: sans-serif; padding: 6px; max-width: 220px;">
+          <strong style="color: ${dm.color}; font-size: 13px;">${dm.name}</strong><br/>
+          <p style="font-size: 11px; color: #0f172a; margin-top: 4px; font-weight: 600;">${dm.text}</p>
+          <span style="font-size: 10px; color: #ef4444; font-weight: bold;">LIVE DISASTER SIMULATION</span>
+        </div>
+      `).openPopup();
+    });
+  }
+
+  const simTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const simMsgs = [
+    {
+      id: `sim_${Date.now()}_1`,
+      sender: "Admin AI (Synth-Pradhan)",
+      role: "admin",
+      zone: "Admin",
+      message: "🚨 FLOOD ALERT TRIGGERED: Level 3 surge detected at Nag River Kamptee bridge! Activating emergency response protocols across Zone 1 & Zone 2.",
+      reasoning: "Synth-Pradhan Orchestrator synthesized telemetry surge & initiated field squad routing.",
+      timeStr: simTime,
+      timestamp: Date.now() / 1000
+    },
+    {
+      id: `sim_${Date.now()}_2`,
+      sender: "Zone 1 AI (Neer-Krishi)",
+      role: "ai",
+      zone: "Zone 1",
+      message: "🌊 Water level rising rapidly at Kamptee intake station. Action: Dewatering Unit #1 dispatched to Nag River bridge coordinates [21.2200, 79.1100]. [VIEW STATUS]",
+      reasoning: "Neer-Krishi Hydro AI calculated flow rate & dispatched 250 HP portable pumps.",
+      timeStr: simTime,
+      timestamp: Date.now() / 1000
+    },
+    {
+      id: `sim_${Date.now()}_3`,
+      sender: "Zone 2 AI (Nagari-Tantra)",
+      role: "ai",
+      zone: "Zone 2",
+      message: "🚦 Traffic congestion increasing near Sitabuldi market due to culvert overflow. Action: Traffic detour initiated via Outer Ring Road & Wardha Road bypass. [MAP VIEW]",
+      reasoning: "Nagari-Tantra Urban AI synchronized digital VMS signage & diverted market traffic.",
+      timeStr: simTime,
+      timestamp: Date.now() / 1000
+    },
+    {
+      id: `sim_${Date.now()}_4`,
+      sender: "Zone 3 AI (Swasthya-Raksha)",
+      role: "ai",
+      zone: "Zone 3",
+      message: "🏥 Vector breeding risk assessment indicates high potential in Hingna MIDC. Action: Mobile fogging unit allocated to Hingna sector B for larvicide spraying. [DEPLOYMENT LOGS]",
+      reasoning: "Swasthya-Raksha Health AI deployed thermal fogging cannons & field triage.",
+      timeStr: simTime,
+      timestamp: Date.now() / 1000
+    }
+  ];
+
+  DEFAULT_C2_STATE.chat.unshift(...simMsgs);
+  updateDashboardUI(DEFAULT_C2_STATE);
+  switchTab('aichat');
+}
