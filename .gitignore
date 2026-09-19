@@ -11,3 +11,4 @@ Api keys synth city.txt
 # System & Log files
 .DS_Store
 *.log
+c2_state.json
