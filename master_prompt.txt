@@ -1,0 +1,241 @@
+================================================================================
+PROJECT SYNTHCITY: 2026 AUTONOMOUS CIVIC INTELLIGENCE C2 MASTER PROMPT
+================================================================================
+DOCUMENT PURPOSE:
+This document is an authoritative, self-contained Master Prompt & System Blueprint
+for Project SynthCity Nagpur (2026). Pasting this exact file into any AI coding 
+assistant or development environment will allow it to recreate the entire, fully-working 
+standalone system from scratch—including backend REST API, Telegram async bot, local state 
+persistence, multi-key model failover, GIS satellite map, dynamic analytics, and 2026 light-theme 
+WhatsApp/iMessage-style split admin panel.
+================================================================================
+
+--------------------------------------------------------------------------------
+1. EXPLICIT CREDENTIALS, API KEYS & SYSTEM CONFIGURATION
+--------------------------------------------------------------------------------
+• TELEGRAM BOT TOKEN:
+  8691301021:AAE0hJe2nU_LqUDnj-HK6NMd037QIYwJtmc
+
+• CARTO BASEMAPS API KEY (Licensed Raster Tiles):
+  cb1_3nqq_1_a586e19e0c11eefc021be78b
+
+• GEMINI & GEMMA GOOGLE AI API KEYS (6 Multi-Key Cascade):
+  - zone1:   YOUR_ZONE1_API_KEY
+  - zone2:   YOUR_ZONE2_API_KEY
+  - zone3:   YOUR_ZONE3_API_KEY
+  - admin:   YOUR_ADMIN_API_KEY
+  - backup1: YOUR_BACKUP1_API_KEY
+  - backup2: YOUR_BACKUP2_API_KEY
+
+• REGISTERED TELEGRAM USER IDS:
+  - Worker 1 ("U"): 8889864487
+  - Citizen Z2 ("Dhynendra Gaurkar"): 5760246204
+  - Worker 2 ("Ritesh Alone"): REPLACE_WITH_RITESH_ALONE_ID (Or Admin Telegram User ID)
+
+• GOOGLE DOCS LIVE NEWS BRIEFING DOC IDS:
+  - Zone 1 (Neer-Krishi): 11UXOyAbyGhIhegMV2bNhZy0SYJNiy0t4zuEl9QHnTt8
+  - Zone 2 (Nagari-Tantra): 1fo2hnkz4z6FVvRXOviorWFdYwLkAru8YojvmTenBIFY
+  - Zone 3 (Swasthya-Raksha): 1aE1sAMZj84afL4GTStQ6vTMMGrY8rpNfP-t_1TFAS6I
+
+--------------------------------------------------------------------------------
+2. 2026 MODEL HIERARCHY & TRIPLE-FAILOVER CASCADE STRATEGY
+--------------------------------------------------------------------------------
+The system uses an automated multi-model cascade strategy. If any model or key returns 
+an HTTP error (429 rate limit, 403 quota, 500 error), the engine automatically tries the 
+next key and next model in hierarchy without crashing or stopping:
+
+1. gemini-3.1-flash-lite  (Primary Ultra-Fast 2026 Model)
+2. gemma-4-26b-a4b-it     (Secondary High-Capacity Reasoning Engine)
+3. gemini-3.5-flash-lite  (Tertiary Failover Engine)
+4. gemma-4-31b-it         (Advanced Deep Telemetry Synthesizer)
+5. gemini-3.6-flash       (Final High-Precision Flash Model)
+6. Local Gemma4 Rule Fallback (Offline Fallback Engine)
+
+--------------------------------------------------------------------------------
+3. PERSONA DEFINITIONS & SYSTEM PROMPTS
+--------------------------------------------------------------------------------
+• Admin AI (Synth-Pradhan):
+  "You are Synth-Pradhan, the lead Admin AI and Chief District Commander for SynthCity Nagpur (2026).
+   You speak warmly, witty, confidently, and naturally like a smart human tech leader and civic administrator.
+   You NEVER speak like a robot, system log, or template text. NEVER output 'Query processed' or 'Operational directive issued'.
+   If the human admin says 'hi' or 'hello' or asks anything, chat naturally, answer their question directly,
+   give them a crisp real-time briefing on Nagpur's 3 zones (Sitabuldi traffic, Kamptee water, Hingna health/MIHAN),
+   and ask how you can assist them! ALWAYS limit answers to under 4 concise lines (max 60 words)."
+
+• Zone 1 AI (Neer-Krishi - Hydro-Agri & Kamptee):
+  "You are Neer-Krishi, the Zone 1 Hydro-Agri & Kamptee Regional AI for SynthCity. You speak warmly, intelligently,
+   and enthusiastically about Kamptee agriculture, Kanhan river hydrology, Kharif paddy crops, and rural sanitation."
+
+• Zone 2 AI (Nagari-Tantra - Urban Core & Sitabuldi Traffic):
+  "You are Nagari-Tantra, the Zone 2 Urban Core & Sitabuldi Traffic AI for SynthCity. You speak energetically, sharply,
+   and urbanely about Sitabuldi traffic bottlenecks, NMC waste compaction, Central Avenue transport, and city logistics."
+
+• Zone 3 AI (Swasthya-Raksha - Industrial Health & MIHAN):
+  "You are Swasthya-Raksha, the Zone 3 Industrial Health & MIHAN AI for SynthCity. You speak caring, analytical,
+   and professional language about MIHAN tech parks, Hingna industrial health, Ambazari spillways, and ambulance fleet dispatch."
+
+--------------------------------------------------------------------------------
+4. KEY FUNCTIONAL REQUIREMENTS & BUSINESS LOGIC
+--------------------------------------------------------------------------------
+1. STRICT UNDER 5-LINE AI RESPONSES:
+   - Every AI response across the web dashboard and Telegram MUST be under 4-5 concise lines (max 60 words).
+   - System automatically splits output by line breaks and truncates `"\n".join(ans_lines[:4])`.
+
+2. NATURAL HUMANIZED WORKER DISPATCH PARSING:
+   - When user prompts: *"send worker 1 message to clean metro station near sitabuldi..."*,
+     *"send message to all worker to complete there task..."*, *"clean sitaburdi fort as priority send message to both of them"*, or *"send all workers to clean zone 3 heritage sites..."*:
+     - Admin AI uses Gemini to synthesize a warm, friendly 1-liner for the worker (e.g. *"Hi U, please clean the Sitabuldi Metro station area and clear entrance debris."*).
+     - The raw user meta-instruction is NEVER sent to the workers.
+     - Dual-Worker Priority Guarantee: Keywords like "both of them", "to both", "both workers", "all workers" or priority alerts automatically queue outbox items for BOTH Worker 1 (U) and Worker 2 (Ritesh).
+     - Outbox Fallback Guarantee: If Worker 2 ID is not yet assigned a numeric Telegram ID, the outbox listener safely routes the dispatch to active Telegram user ID (`WORKER_1_ID`) so the alert is received instantly on Telegram.
+     - The message is pushed to `state["dashboard_outbox"]` and delivered via Telegram immediately.
+     - The task is logged in `state["workers"][target]["pending_tasks"]`.
+
+3. SMART HERITAGE SITE & AREA DIVISION:
+   - Prompting to divide Zone 3 heritage sites by area splits landmarks:
+     - Worker 1 (U): Ambazari Heritage Lake Promenade & Pavilion (1.2 sq km area).
+     - Worker 2 (Ritesh): Futala Heritage Promenade & MIDC Enclave (0.9 sq km area).
+
+4. 2-WAY TELEGRAM CITIZEN & WORKER LOOP:
+   - Citizen reports issue on Telegram -> Bot dispatches alert to Worker 1 & Worker 2.
+   - Worker replies on Telegram ("ok I will do this") -> Bot auto-notifies Citizen on Telegram ("Hi Dhynendra, your issue has been assigned to Worker U and is being handled now!").
+   - Worker asks *"what are my tasks"* on Telegram -> Bot returns active pending tasks list from `c2_state.json`.
+
+5. 30-MINUTE GOOGLE DOCS AUTO-SYNC:
+   - Background thread `update_google_docs_news_loop` fetches Zone 1, 2, and 3 Google Docs every 30 minutes, extracts top 3 bullet points, and records sync timestamp for UI relative time badges ("Synced just now", "Synced 5m ago").
+
+6. 2026 WHATSAPP/iMESSAGE SPLIT MESSAGING CONSOLE (TAB 2):
+   - 3-Panel Split Layout: Left thread sidebar (Admin, Zone 1, Zone 2, Zone 3, Worker 1 U, Worker 2 Ritesh, Citizen Dhynendra), center high-contrast chat window (`#0f172a` text on white card bubbles), quick action chips bar, and send form.
+
+7. WATERMARK-FREE CARTO & ESRI SATELLITE GIS MAP (TAB 7):
+   - CARTO Voyager light map tiles (`https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_3nqq_1_a586e19e0c11eefc021be78b`).
+   - Esri World Satellite Imagery layer.
+   - Clickable Zone News markers at centroids and active assigned Worker task markers.
+
+8. DYNAMIC MULTI-CHART ANALYTICS DASHBOARD (TAB 5):
+   - 4 Chart.js dynamic charts: Zone Vulnerability Bar Chart, Emergency Fleet Doughnut Chart, Dataset Amenities Stacked Chart, and Real-Time Telemetry Line Trend Chart.
+
+--------------------------------------------------------------------------------
+5. FILE SPECIFICATIONS & RECREATION BLUEPRINT
+--------------------------------------------------------------------------------
+
+[FILE 1: config.js]
+Contains API base URL (`http://localhost:8000`), CARTO API key (`cb1_3nqq_1_a586e19e0c11eefc021be78b`), tile URLs (Voyager, Dark, Esri Satellite), Nagpur coordinates (`21.1458, 79.0882`), and 3 zone bounding polygons.
+
+[FILE 2: styles.css]
+Defines CSS root variables, glassmorphism cards (`.glass-card`), high-contrast slate typography (`#0f172a`), 3-panel split messaging console (`.thread-item`, `.chat-bubble-user`, `.chat-bubble-ai`, `.action-chip`), pulse animation markers, compact toast popups (`#toast-container`), and custom scrollbars.
+
+[FILE 3: backend.py]
+Python HTTP REST API server running on port 8000. Features:
+- `run_http_server(8000)`: Serves HTTP REST API on the main thread to ensure 100% continuous uptime without dropping connection.
+- `run_bot_engine_safe()`: Runs Telegram Bot engine in an auto-restarting daemon thread with a try-except loop.
+- `load_nagpur_datasets()`: Ingests 5 local CSV/XLS datasets.
+- `load_c2_state()` / `save_c2_state()`: Local JSON persistence (`c2_state.json`).
+- `call_gemini_api()`: Multi-key and multi-model cascade with session history context.
+- `worker_auto_dispatch_1min_loop()`: 1-minute automated worker patrol generator.
+- `auto_ai_debate_background_loop()`: Autonomous multi-agent AI debate room.
+- `update_google_docs_news_loop()`: 30-minute Google Docs fetch thread.
+- `C2ApiHandler`: GET (`/api/state`, `/api/news`, `/api/analytics`, `/api/diagnostics`), POST (`/api/chat_ai`, `/api/upload_news`, `/api/dispatch`, `/api/toggle_debate`, `/api/memory`).
+
+[FILE 4: bot_engine.py]
+Python-Telegram-Bot v20+ Async ApplicationBuilder daemon. Features:
+- `TripleFailoverAIEngine`: Multi-model Gemma 4 & Gemini failover with thought separator.
+- `handle_telegram_message()`: 2-way Citizen complaint routing, worker task assignment notify, worker task inquiry handler ("what are my tasks"), and conversational response generator.
+- `dashboard_outbox_listener()`: Continuous 1.5s loop picking items from `c2_state.json` `dashboard_outbox` and pushing directly to Telegram worker/citizen IDs.
+
+[FILE 5: index.html]
+Single Page Admin Dashboard layout with SVG Favicon, left navigation sidebar, top header bar with active model & tile switcher, real-time toast container, and 8 modular tabs:
+1. `#tab-overview`: Overview cards, system quick check, and embedded CARTO GIS map.
+2. `#tab-aichat`: 2026 WhatsApp/iMessage Split Messaging Console.
+3. `#tab-upload`: 3 Zone Google Docs briefing cards with sync badges & file drag-drop upload zone.
+4. `#tab-debate`: Multi-agent AI debate room with toggle control button.
+5. `#tab-analytics`: Dynamic C2 analytics dashboard with 4 Chart.js charts.
+6. `#tab-comms`: Telegram & Worker C2 console with live outbox stream and manual dispatch override.
+7. `#tab-map`: High-definition GIS Map with Satellite toggle, news points, and worker task markers.
+8. `#tab-diagnostics`: Live system diagnostics status grid.
+
+[FILE 6: app.js]
+Frontend JavaScript logic. Features:
+- State polling (`fetchState()` every 2000ms).
+- Leaflet map initialization (`initOverviewMap()`, `initFullMap()`, `toggleMapTheme()`).
+- Zone news points and active worker task markers renderer (`renderZonePolygons()`).
+- Thread selection (`selectChatThread()`), quick action chip triggers (`triggerActionChip()`), and direct AI chat submit (`sendDirectAIChat()`).
+- Chart.js dynamic analytics renderer (`renderAnalyticsCharts()`).
+- Document upload handler (`uploadDocumentNews()`) and toast notification display (`showToast()`).
+
+[FILE 7: START_SYSTEM.bat]
+Batch launcher script that terminates old python tasks and launches `py backend.py`.
+
+--------------------------------------------------------------------------------
+6. HOW TO RUN THE SYSTEM
+--------------------------------------------------------------------------------
+1. Install requirements:
+   pip install requests python-telegram-bot
+
+2. Launch backend daemon:
+   py backend.py
+
+3. Open Admin Dashboard in browser:
+   http://localhost:8000 (or double-click index.html)
+
+--------------------------------------------------------------------------------
+7. HOW TO USE & OPERATE THE SYSTEM (STEP-BY-STEP USER & AI OPERATIONAL GUIDE)
+--------------------------------------------------------------------------------
+
+A. USING THE INTERACTIVE 2026 SPLIT MESSAGING CONSOLE (TAB 2):
+   1. Click 'Interactive AI Chat' on the left navigation sidebar.
+   2. Select an active conversation thread on the left list:
+      - Admin AI (Synth-Pradhan)
+      - Zone 1 AI (Neer-Krishi)
+      - Zone 2 AI (Nagari-Tantra)
+      - Zone 3 AI (Swasthya-Raksha)
+      - Worker 1 (U)
+      - Worker 2 (Ritesh Alone)
+      - Dhynendra Gaurkar (Citizen)
+   3. Quick Action Chips:
+      - Click '⚡ Dispatch Worker 1' -> Pre-fills worker 1 dispatch command.
+      - Click '⚡ Dispatch Worker 2' -> Pre-fills worker 2 dispatch command.
+      - Click '📋 Pending Tasks' -> Pre-fills pending tasks query.
+      - Click '🚨 Evacuation Alert' -> Triggers emergency evacuation command.
+   4. Natural AI Commands:
+      - Type any task in plain English, e.g. "send worker 1 message to clean sitabuldi metro station". Admin AI will synthesize a friendly 1-line message for Worker 1 and send it via Telegram immediately.
+      - Type "send all workers to clean zone 3 heritage sites divide both of them as per the area and send instructions". Admin AI will split Ambazari Promenade (1.2 sq km) for Worker 1 and Futala Promenade (0.9 sq km) for Worker 2, sending tailored Telegram messages to each device.
+
+B. FIELD WORKERS TELEGRAM INTERACTIONS:
+   1. Worker 1 (U) and Worker 2 (Ritesh) receive instant task directives on Telegram.
+   2. Workers can ask on Telegram: "what are my tasks", "my pending tasks", or "what should I do". The bot will reply with their active assigned task list.
+   3. Workers can report completed tasks by messaging "cleared drain #4" or "done with heritage promenade". The system updates their status to 'COMPLETED TASK'.
+
+C. 2-WAY CITIZEN TELEGRAM COMPLAINT LOOP:
+   1. Citizen Dhynendra Gaurkar sends a complaint on Telegram (e.g. "water logging near Sitabuldi market").
+   2. Bot auto-dispatches alert to Worker 1 & Worker 2 on Telegram.
+   3. When a worker replies ("ok I will do this"), the bot auto-notifies Citizen Dhynendra on Telegram: "Hi Dhynendra, your issue 'water logging near Sitabuldi market' has been assigned to Worker U and is being handled now!".
+
+D. DOCUMENT & FILE NEWS INGESTION (TAB 3):
+   1. View 3 Zone Document News cards displaying live Google Docs summaries with 30-Min Auto-Sync Badges ("Synced just now", "Synced 5m ago").
+   2. Drag & drop or click to upload report files (.txt, .csv, .doc, .pdf, .json), or paste raw news text into the text box.
+   3. Select Target Scope (All Zones, Zone 1, Zone 2, Zone 3) and click 'Ingest & Process Document Directive'.
+
+E. AUTO-AI DEBATE ROOM (TAB 4):
+   1. Click 'Run 1 Debate Cycle' to trigger a manual discussion turn between Zone AIs and Admin AI.
+   2. Click 'Debate Loop: OFF / ACTIVE' to start automated 15-second agent discussion.
+
+F. DYNAMIC C2 ANALYTICS DASHBOARD (TAB 5):
+   1. View 4 dynamic Chart.js charts: Zone Vulnerability Bar Chart, Fleet Status Doughnut Chart, Dataset Amenities Stacked Chart, and Real-Time Telemetry Line Chart.
+   2. Click 'Refresh Dynamic Charts' to update charts.
+
+G. TELEGRAM & WORKER C2 CONSOLE (TAB 6):
+   1. View incoming citizen/worker Telegram feed on the left card.
+   2. View AI reasoning pipeline logs on the right card.
+   3. Use 'Manual Dispatch Controller' to send direct manual messages to Worker 1 (U), Worker 2 (Ritesh), or Citizen Dhynendra.
+
+H. WATERMARK-FREE GIS MAP (TAB 7):
+   1. Click 'Carto Voyager (Light)' button in top header to switch tile layers (Voyager Light, Realistic Satellite Imagery, Carto Dark, Esri World Street).
+   2. Click on Zone News Point markers at centroids or Active Worker Task markers to view active task assignments and telemetry details.
+
+I. SYSTEM DIAGNOSTICS & HEALTH CHECK (TAB 8):
+   1. Click 'Run Live Diagnostics Check' to verify Telegram Bot API, Local REST Server, and 6 Gemini/Gemma API Keys status.
+
+================================================================================
+END OF SYNTHCITY MASTER PROMPT FILE
+================================================================================

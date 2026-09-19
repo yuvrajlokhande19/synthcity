@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "chat": {
+      ".indexOn": ["timestamp"]
+    },
+    "alerts": {
+      ".indexOn": ["timestamp"]
+    },
+    "map_markers": {
+      ".indexOn": ["timestamp"]
+    }
+  }
+}

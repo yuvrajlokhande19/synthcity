@@ -1,0 +1,629 @@
+/* ================================================================================
+   PROJECT SYNTHCITY C2: 2026 GLASSMORPHISM & CIVIC INTELLIGENCE DESIGN SYSTEM
+   ================================================================================ */
+
+:root {
+  /* Surface & Background Palettes */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-dim: #f1f5f9;
+  --color-surface-high: #e2e8f0;
+  --color-surface-highest: #cbd5e1;
+
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-bg-subtle: rgba(248, 250, 252, 0.65);
+  --glass-border: rgba(226, 232, 240, 0.85);
+  --glass-border-focus: rgba(2, 132, 199, 0.4);
+  --glass-glow: rgba(2, 132, 199, 0.08);
+  --glass-blur: blur(16px);
+  --glass-blur-lg: blur(24px);
+
+  /* Brand Accents */
+  --color-primary: #0284c7;
+  --color-primary-hover: #0369a1;
+  --color-primary-light: #e0f2fe;
+  --color-primary-border: #bae6fd;
+
+  --color-secondary: #4f46e5;
+  --color-secondary-hover: #4338ca;
+  --color-secondary-light: #e0e7ff;
+
+  --color-tertiary: #10b981;
+  --color-tertiary-hover: #059669;
+  --color-tertiary-light: #d1fae5;
+
+  --color-success: #10b981;
+  --color-success-light: #d1fae5;
+
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+
+  --color-error: #ef4444;
+  --color-error-light: #fee2e2;
+
+  /* Typography Slates */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows & Glows */
+  --shadow-glass: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  --shadow-glass-hover: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+  --shadow-glow-azure: 0 0 16px -2px rgba(2, 132, 199, 0.25);
+  --shadow-glow-emerald: 0 0 16px -2px rgba(16, 185, 129, 0.25);
+
+  /* Legacy Zone Tokens Compatibility */
+  --zone1-color: #0284c7;
+  --zone2-color: #d97706;
+  --zone3-color: #7c3aed;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --text-main: #0f172a;
+  --text-body: #1e293b;
+  --text-sub: #334155;
+  --text-muted: #64748b;
+  --brand-blue: #0284c7;
+  --wa-green: #075e54;
+  --wa-light-green: #dcf8c6;
+  --wa-teal: #128c7e;
+  --wa-blue-tick: #34b7f1;
+}
+
+body {
+  background-color: var(--color-bg);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.04) 0px, transparent 45%),
+    radial-gradient(at 100% 100%, rgba(79, 70, 229, 0.04) 0px, transparent 45%),
+    radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.02) 0px, transparent 60%);
+  color: var(--color-text-primary);
+  font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* ================================================================================
+   1. GLASS PANELS & CARDS
+   ================================================================================ */
+
+.glass-panel, .glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-glass);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.glass-panel:hover, .glass-card:hover {
+  border-color: var(--glass-border-focus);
+  box-shadow: var(--shadow-glass-hover);
+}
+
+.glass-card-sm {
+  background: var(--color-surface-dim);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+}
+
+.glass-card-sm:hover {
+  background: var(--color-surface);
+  border-color: var(--glass-border-focus);
+  box-shadow: var(--shadow-glass);
+}
+
+.glass-subcard {
+  background: rgba(241, 245, 249, 0.75);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.glass-subcard:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--glass-border-focus);
+}
+
+/* ================================================================================
+   2. TOP NAVIGATION & NAVIGATION PILLS
+   ================================================================================ */
+
+.top-morphism-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.top-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.875rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background: #ffffff;
+  border: 1px solid var(--glass-border);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.top-nav-pill:hover {
+  background: var(--color-surface-dim);
+  color: var(--color-text-primary);
+  border-color: var(--color-surface-highest);
+  transform: translateY(-1px);
+}
+
+.top-nav-pill.active {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: #ffffff;
+  border-color: var(--color-primary-border);
+  box-shadow: var(--shadow-glow-azure);
+}
+
+/* Sidebar Navigation Buttons */
+.nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: #ffffff;
+  border: 1px solid var(--glass-border);
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-bottom: 0.375rem;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  background: var(--color-surface-dim);
+  color: var(--color-text-primary);
+  border-color: var(--glass-border-focus);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-glass);
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: #ffffff;
+  font-weight: 700;
+  border: 1px solid var(--color-primary-border);
+  box-shadow: var(--shadow-glow-azure);
+  transform: translateX(4px);
+}
+
+/* Dynamic Tab Entry & Fade Animation */
+.tab-content {
+  animation: tabFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================================================================================
+   3. BUTTONS & ACTION CHIPS
+   ================================================================================ */
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-glow-azure);
+  transform: translateY(-1px);
+}
+
+.btn-morphism {
+  background: #ffffff;
+  border: 1px solid var(--color-surface-highest);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-morphism:hover {
+  background: var(--color-bg);
+  border-color: var(--color-text-subtle);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glass);
+}
+
+.btn-morphism-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  border: 1px solid var(--color-primary-border);
+  color: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glow-azure);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-morphism-primary:hover {
+  background: linear-gradient(135deg, var(--color-primary-hover) 0%, #075985 100%);
+  box-shadow: 0 8px 22px -3px rgba(2, 132, 199, 0.45);
+  transform: translateY(-1px);
+}
+
+.action-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: #ffffff;
+  border: 1px solid var(--color-surface-high);
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.action-chip:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary-border);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.18);
+}
+
+/* ================================================================================
+   4. STATUS BADGES & TELEMETRY INDICATORS
+   ================================================================================ */
+
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--radius-full);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-status.nominal {
+  background: var(--color-success-light);
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.badge-status.alert {
+  background: var(--color-error-light);
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.badge-status.azure {
+  background: var(--color-primary-light);
+  color: #0369a1;
+  border: 1px solid var(--color-primary-border);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-ring 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.pulse-marker {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.pulse-marker::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: -2px;
+  left: -2px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* ================================================================================
+   5. CHAT & MESSAGING BUBBLES
+   ================================================================================ */
+
+.bubble-user {
+  background: #ffffff;
+  color: var(--color-text-primary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl) var(--radius-xl) 2px var(--radius-xl);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  padding: 0.875rem 1rem;
+}
+
+.bubble-ai {
+  background: rgba(224, 242, 254, 0.45);
+  color: var(--color-text-primary);
+  border: 1px solid rgba(186, 230, 253, 0.6);
+  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-xl) 2px;
+  padding: 0.875rem 1rem;
+}
+
+.whatsapp-bg {
+  background-color: #efeae2;
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.chat-bubble-wa-user {
+  background: #dcf8c6;
+  color: var(--color-text-primary);
+  border-radius: 0.875rem 0.875rem 0.125rem 0.875rem;
+  box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.08);
+}
+
+.chat-bubble-wa-incoming {
+  background: #ffffff;
+  color: var(--color-text-primary);
+  border-radius: 0.875rem 0.875rem 0.875rem 0.125rem;
+  box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.08);
+}
+
+.chat-bubble-wa-forwarded {
+  background: var(--color-primary-light);
+  color: #0369a1;
+  border-left: 3px solid var(--color-primary);
+  padding: 0.375rem 0.625rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-bottom: 0.375rem;
+}
+
+/* WhatsApp Tick Mark Styling */
+.tick-mark {
+  font-size: 0.7rem;
+  font-weight: bold;
+  letter-spacing: -1px;
+}
+.tick-single { color: var(--color-text-subtle); }
+.tick-double { color: var(--color-text-muted); }
+.tick-blue { color: var(--wa-blue-tick); }
+
+/* INSTAGRAM DM STYLE FOR AI DEBATE ROOM */
+.insta-bubble-zone1 {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.06);
+}
+
+.insta-bubble-zone2 {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fde68a;
+  color: #b45309;
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.06);
+}
+
+.insta-bubble-zone3 {
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  border: 1px solid #e9d5ff;
+  color: #6d28d9;
+  border-radius: 1.25rem 1.25rem 1.25rem 0.25rem;
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.06);
+}
+
+.insta-bubble-admin {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  border: 1px solid #3b82f6;
+  color: #ffffff;
+  border-radius: 1.25rem 1.25rem 0.25rem 1.25rem;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+}
+
+/* ================================================================================
+   6. FILE UPLOAD DROPZONE & THREAD ITEMS
+   ================================================================================ */
+
+.upload-dropzone {
+  border: 2px dashed var(--color-surface-highest);
+  background: var(--color-bg);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.upload-dropzone:hover, .upload-dropzone.dragover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(2, 132, 199, 0.15);
+}
+
+.thread-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.thread-item:hover {
+  background: var(--color-bg);
+  border-color: var(--color-surface-highest);
+  transform: translateY(-1px);
+}
+
+.thread-item.active {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-border);
+  box-shadow: 0 4px 14px -2px rgba(2, 132, 199, 0.15);
+}
+
+.chat-msg-animated {
+  animation: msgPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes msgPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ================================================================================
+   7. TOAST POPUPS & MODALS
+   ================================================================================ */
+
+#toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  max-width: 330px;
+}
+
+.toast-popup {
+  pointer-events: auto;
+  background: #ffffff;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 0.625rem 0.875rem;
+  box-shadow: 0 12px 28px -5px rgba(15, 23, 42, 0.14);
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  animation: toast-slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: all 0.2s ease;
+}
+
+.toast-popup.toast-success { border-left: 4px solid var(--color-success); }
+.toast-popup.toast-info { border-left: 4px solid var(--color-primary); }
+.toast-popup.toast-warning { border-left: 4px solid var(--color-warning); }
+.toast-popup.toast-error { border-left: 4px solid var(--color-error); }
+
+@keyframes toast-slide-in {
+  from { transform: translateX(100%) scale(0.95); opacity: 0; }
+  to { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-dialog {
+  background: #ffffff;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.2);
+  width: 100%;
+  max-width: 520px;
+  transform: scale(0.95) translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.modal-backdrop.active .modal-dialog {
+  transform: scale(1) translateY(0);
+}
+
+/* ================================================================================
+   8. SLEEK CUSTOM SCROLLBAR
+   ================================================================================ */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-surface-highest); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-subtle); }

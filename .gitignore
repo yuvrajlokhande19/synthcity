@@ -1,0 +1,13 @@
+# Dependencies & Cache
+node_modules/
+__pycache__/
+*.pyc
+
+# Environment & API Key secrets
+api_keys.txt
+Api keys synth city.txt
+.env
+
+# System & Log files
+.DS_Store
+*.log

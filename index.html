@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project SynthCity Nagpur | Autonomous Civic Intelligence C2</title>
+
+  <!-- Favicon Icon (SynthCity Civic C2 Globe) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230284c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20'/><path d='M2 12h20'/></svg>">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Leaflet.js CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js CDN for Dynamic Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Google Fonts: Inter, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Configuration & Custom Styles -->
+  <script src="config.js"></script>
+  <link rel="stylesheet" href="styles.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            synthBrand: '#2563eb',
+            zone1: '#0284c7', // Cyan
+            zone2: '#d97706', // Amber
+            zone3: '#7c3aed', // Purple
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="h-full flex text-slate-900 antialiased overflow-hidden font-sans bg-slate-50">
+
+  <!-- REAL-TIME TOAST POPUP CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- ============================================================================== -->
+  <!-- 1. LEFT SIDEBAR NAVIGATION MENU -->
+  <!-- ============================================================================== -->
+  <aside class="w-64 bg-white/80 backdrop-blur-2xl border-r border-slate-200/80 flex flex-col justify-between shrink-0 z-30 shadow-sm">
+    <div class="p-5 flex flex-col h-full">
+      
+      <!-- Brand Header -->
+      <div class="flex items-center gap-3.5 pb-5 border-b border-slate-200/80">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-sky-500 flex items-center justify-center shadow-md shadow-blue-500/20 text-white">
+          <i data-lucide="cpu" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-base tracking-tight text-slate-900 leading-tight">SYNTH<span class="text-blue-600">CITY</span></h1>
+          <p class="text-[11px] font-semibold text-slate-500">Nagpur Civic C2 (2026)</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="mt-5 space-y-1 flex-1 overflow-y-auto pr-1">
+        <button onclick="switchTab('overview')" id="nav-overview" class="nav-btn active">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>Overview</span>
+        </button>
+        <button onclick="switchTab('aichat')" id="nav-aichat" class="nav-btn">
+          <i data-lucide="message-square-plus" class="w-4 h-4"></i>
+          <span>AI Chat</span>
+          <span class="ml-auto bg-blue-100 text-blue-800 border border-blue-300 text-[10px] font-bold px-2 py-0.5 rounded-full">LIVE</span>
+        </button>
+        <button onclick="switchTab('upload')" id="nav-upload" class="nav-btn">
+          <i data-lucide="file-up" class="w-4 h-4"></i>
+          <span>Upload News</span>
+          <span class="ml-auto bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">DOC/PDF</span>
+        </button>
+        <button onclick="switchTab('debate')" id="nav-debate" class="nav-btn">
+          <i data-lucide="bot" class="w-4 h-4"></i>
+          <span>AI Debate</span>
+        </button>
+        <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          <span>Analytics</span>
+        </button>
+        <button onclick="switchTab('comms')" id="nav-comms" class="nav-btn">
+          <i data-lucide="send" class="w-4 h-4"></i>
+          <span>Telegram & Workers</span>
+        </button>
+        <button onclick="switchTab('map')" id="nav-map" class="nav-btn">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>City Map</span>
+        </button>
+        <button onclick="switchTab('diagnostics')" id="nav-diagnostics" class="nav-btn">
+          <i data-lucide="activity" class="w-4 h-4"></i>
+          <span>System Health</span>
+        </button>
+      </nav>
+
+      <!-- System Activator Button -->
+      <div class="pt-4 border-t border-white/10 space-y-2">
+        <button id="system-start-btn" onclick="triggerSystemStart()" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs transition shadow-lg shadow-emerald-600/20 border border-emerald-400/30">
+          <i data-lucide="play-circle" class="w-4 h-4 text-emerald-200"></i>
+          <span id="system-btn-text">System Active (C2 Connected)</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================================== -->
+  <!-- 2. MAIN CONTENT AREA -->
+  <!-- ============================================================================== -->
+  <main class="flex-1 flex flex-col min-w-0 bg-transparent overflow-hidden relative">
+    
+    <!-- Top Header Bar -->
+    <header class="h-16 bg-white/70 backdrop-blur-xl border-b border-slate-200/80 px-6 flex items-center justify-between z-20">
+      <div class="flex items-center gap-4">
+        <h2 id="page-title" class="text-base font-bold text-slate-900 tracking-tight">District Command Overview</h2>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Standalone C2 Online (Carto GIS)
+        </span>
+      </div>
+
+      <div class="flex items-center gap-4 text-xs font-semibold text-slate-700">
+        <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl font-mono text-slate-700">
+          <i data-lucide="clock" class="w-4 h-4 text-slate-500"></i>
+          <span id="live-clock-display">12:00:00 PM</span>
+        </div>
+
+        <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-xl">
+          <i data-lucide="cpu" class="w-4 h-4 text-blue-600"></i>
+          <span id="active-model-display" class="font-bold text-slate-800">Model: Gemini 3.1 Flash Lite</span>
+        </div>
+
+        <button onclick="toggleMapTheme()" class="flex items-center gap-2 bg-white hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-xl transition text-slate-800 shadow-sm font-bold">
+          <i data-lucide="layers" class="w-4 h-4 text-indigo-600"></i>
+          <span id="theme-btn-text">Carto Voyager (Light)</span>
+        </button>
+
+        <!-- Admin Profile Avatar -->
+        <div class="flex items-center gap-2.5 pl-2 border-l border-slate-200">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white flex items-center justify-center font-extrabold text-xs shadow-md shadow-blue-500/20">
+            AD
+          </div>
+          </div>
+        </div>
+      </header>
+    <!-- TOP GLASSMORPHISM NAVIGATION BAR -->
+    <div class="top-morphism-nav px-6 py-2.5 flex items-center gap-2 overflow-x-auto z-10 shrink-0 shadow-2xs">
+      <button onclick="switchTab('overview')" id="top-nav-overview" class="top-nav-pill active">
+        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i> Overview
+      </button>
+      <button onclick="switchTab('aichat')" id="top-nav-aichat" class="top-nav-pill">
+        <i data-lucide="message-square-plus" class="w-3.5 h-3.5"></i> AI Chat
+      </button>
+      <button onclick="switchTab('upload')" id="top-nav-upload" class="top-nav-pill">
+        <i data-lucide="file-up" class="w-3.5 h-3.5"></i> Upload News
+      </button>
+      <button onclick="switchTab('debate')" id="top-nav-debate" class="top-nav-pill">
+        <i data-lucide="bot" class="w-3.5 h-3.5"></i> AI Debate
+      </button>
+      <button onclick="switchTab('analytics')" id="top-nav-analytics" class="top-nav-pill">
+        <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> Analytics
+      </button>
+      <button onclick="switchTab('comms')" id="top-nav-comms" class="top-nav-pill">
+        <i data-lucide="send" class="w-3.5 h-3.5"></i> Telegram WhatsApp UI
+      </button>
+      <button onclick="switchTab('map')" id="top-nav-map" class="top-nav-pill">
+        <i data-lucide="map" class="w-3.5 h-3.5"></i> City Map
+      </button>
+      <button onclick="switchTab('diagnostics')" id="top-nav-diagnostics" class="top-nav-pill">
+        <i data-lucide="activity" class="w-3.5 h-3.5"></i> System Health
+      </button>
+      
+      <div class="ml-auto flex items-center gap-2">
+        <button onclick="openDispatchModal()" class="px-3.5 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white border border-blue-200 rounded-full text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i> Quick Dispatch
+        </button>
+        <button onclick="openEmergencyModal()" class="px-3.5 py-1.5 bg-red-50 text-red-700 hover:bg-red-600 hover:text-white border border-red-200 rounded-full text-xs font-bold transition flex items-center gap-1.5 shadow-2xs">
+          <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Emergency Alert
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB CONTENTS -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-6">
+
+      <!-- ======================================================================== -->
+      <!-- TAB 1: OVERVIEW & STATUS -->
+      <!-- ======================================================================== -->
+      <section id="tab-overview" class="tab-content block space-y-6">
+
+        <!-- Humanized Welcome Greeting Banner -->
+        <div class="glass-card p-6 bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 text-white rounded-2xl shadow-md flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-bold text-white mb-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
+              Live Operations Briefing • Nagpur C2
+            </div>
+            <h2 class="text-xl md:text-2xl font-extrabold tracking-tight">Welcome back, Admin Commander! 👋</h2>
+            <p class="text-xs md:text-sm text-blue-100 font-medium">All 3 Nagpur civic zones are operating normally. Kanhan hydrology is stable, Sitabuldi traffic is synced, and 2 field units are on active patrol.</p>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <button onclick="switchTab('aichat')" class="py-2.5 px-4 rounded-xl bg-white text-blue-700 hover:bg-blue-50 font-extrabold text-xs shadow-sm transition flex items-center gap-2">
+              <i data-lucide="message-square" class="w-4 h-4"></i> AI Chat Console
+            </button>
+            <button onclick="switchTab('comms')" class="py-2.5 px-4 rounded-xl bg-blue-500/30 hover:bg-blue-500/40 text-white border border-white/20 font-extrabold text-xs transition flex items-center gap-2">
+              <i data-lucide="send" class="w-4 h-4"></i> Dispatch Field Unit
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+          <div class="glass-card p-5 border-l-4 border-l-blue-600 bg-white flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-slate-600">Telegram Bot Engine</p>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">v20+ Async Online</h3>
+              <p class="text-[11px] font-semibold text-blue-600 mt-1">1-Min Auto-Worker Dispatch</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+              <i data-lucide="bot" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 border-l-4 border-l-amber-500 bg-white flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-slate-600">Citizen Monitoring</p>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">Dhynendra Gaurkar</h3>
+              <p class="text-[11px] font-semibold text-amber-600 mt-1">Zone 2 AI Auto-Dispatch</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 font-bold">
+              <i data-lucide="user-check" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 border-l-4 border-l-emerald-500 bg-white flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-slate-600">Active Field Units</p>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">2 Field Units</h3>
+              <p class="text-[11px] font-semibold text-emerald-600 mt-1">U & Ritesh Alone</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 border-l-4 border-l-purple-600 bg-white flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-slate-600">Datasets Ingested</p>
+              <h3 class="text-xl font-extrabold text-slate-900 mt-1">5 Datasets</h3>
+              <p class="text-[11px] font-semibold text-purple-600 mt-1">Nagpur Urban, Rural & Health</p>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+              <i data-lucide="database" class="w-5 h-5"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live IoT Hardware Telemetry Link & Status Widget -->
+        <div id="iot-telemetry-card" class="glass-card p-5 bg-white border-2 border-sky-200 rounded-2xl shadow-sm space-y-3">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-bold">
+                <i data-lucide="radio" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm md:text-base font-extrabold text-slate-900">📡 Live IoT Hardware Telemetry (ESP-01 / Kamptee Intake)</h3>
+                  <a href="https://caucus-same-unworn.ngrok-free.dev/" target="_blank" rel="noopener noreferrer" class="px-2.5 py-0.5 rounded-full bg-sky-100 hover:bg-sky-200 text-sky-800 text-[11px] font-bold border border-sky-300 transition inline-flex items-center gap-1">
+                    <i data-lucide="external-link" class="w-3 h-3"></i> caucus-same-unworn.ngrok-free.dev
+                  </a>
+                </div>
+                <p class="text-xs text-slate-500 font-medium">Real-time water level monitoring & automated emergency breach detection system</p>
+              </div>
+            </div>
+
+            <!-- Live Level Display & Status Badge -->
+            <div class="flex items-center gap-3">
+              <div id="iot-status-badge" class="px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-bold flex items-center gap-2">
+                <span id="iot-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="iot-status-text">NORMAL (22.5 cm)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Simulation / Test Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs pt-1">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-slate-700">Test Hardware Triggers:</span>
+              <button onclick="simulateIoT('normal')" class="px-3 py-1 rounded-xl bg-slate-100 hover:bg-emerald-100 hover:text-emerald-800 text-slate-700 font-bold border border-slate-200 transition">
+                🟢 Normal (22.5cm)
+              </button>
+              <button onclick="simulateIoT('warning')" class="px-3 py-1 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-300 transition">
+                🟡 Warning (14.0cm &lt; 15cm)
+              </button>
+              <button onclick="simulateIoT('critical')" class="px-3 py-1 rounded-xl bg-red-50 hover:bg-red-100 text-red-800 font-bold border border-red-300 transition">
+                🚨 Critical Emergency (4.5cm &lt; 5cm)
+              </button>
+              <button onclick="simulateIoT('reset')" class="px-3 py-1 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-800 font-bold border border-sky-200 transition">
+                🔄 Reset State
+              </button>
+            </div>
+            <div class="text-[11px] text-slate-400 font-medium italic">
+              Auto-polls ngrok hardware link every 5s
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 glass-card p-5 flex flex-col h-[480px] bg-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-5 h-5 text-blue-600"></i>
+                <h3 class="font-extrabold text-slate-900">Live City GIS Map</h3>
+              </div>
+              <span class="text-xs font-mono font-semibold text-slate-600">Nagpur Interactive Map</span>
+            </div>
+            <div id="overview-map" class="w-full flex-1 rounded-xl overflow-hidden border border-slate-200 z-10"></div>
+          </div>
+
+          <div class="glass-card p-5 flex flex-col justify-between bg-white">
+            <div>
+              <div class="flex items-center gap-2 pb-3 border-b border-slate-200 mb-4">
+                <i data-lucide="activity" class="w-5 h-5 text-emerald-600"></i>
+                <h3 class="font-extrabold text-slate-900">System Quick Check</h3>
+              </div>
+              <div class="space-y-2.5 text-xs">
+                <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span class="font-bold text-slate-800">Telegram Bot API:</span>
+                  <span class="text-emerald-700 font-mono font-extrabold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> ONLINE</span>
+                </div>
+                <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span class="font-bold text-slate-800">Local REST Server:</span>
+                  <span class="text-emerald-700 font-mono font-extrabold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> ONLINE</span>
+                </div>
+                <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span class="font-bold text-slate-800">API Keys (6 Active):</span>
+                  <span class="text-emerald-700 font-mono font-extrabold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> ACTIVE (200)</span>
+                </div>
+                <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  <span class="font-bold text-slate-800">Telegram Auto Dispatch:</span>
+                  <span class="text-emerald-700 font-mono font-extrabold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> ACTIVE</span>
+                </div>
+              </div>
+            </div>
+            
+            <button onclick="switchTab('aichat')" class="w-full mt-4 py-3 btn-morphism-primary rounded-xl font-extrabold text-xs flex items-center justify-center gap-2">
+              <i data-lucide="message-square" class="w-4 h-4"></i>
+              Open AI Chat Terminal
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================== -->
+      <!-- TAB 2: 2026 WHATSAPP/iMESSAGE SPLIT MESSAGING CONSOLE -->
+      <!-- ======================================================================== -->
+      <section id="tab-aichat" class="tab-content hidden space-y-6">
+        <div class="glass-card p-0 bg-white border border-slate-200/90 rounded-2xl overflow-hidden flex h-[680px] shadow-sm">
+          
+          <!-- LEFT THREADS PANEL -->
+          <div class="w-80 bg-slate-50/80 border-r border-slate-200/80 flex flex-col shrink-0">
+            <div class="p-4 border-b border-slate-200/80 flex items-center justify-between bg-white">
+              <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <i data-lucide="message-square-text" class="w-4 h-4 text-blue-600"></i> Active Conversations
+              </h3>
+              <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">7 Active</span>
+            </div>
+
+            <!-- Threads List -->
+            <div class="p-3 space-y-2 flex-1 overflow-y-auto">
+              <button onclick="selectChatThread('admin')" id="thread-admin" class="thread-item active w-full text-left">
+                <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                  <i data-lucide="shield" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-900 truncate">Admin AI (Synth-Pradhan)</h4>
+                    <span class="text-[10px] text-blue-600 font-bold">ONLINE</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 truncate">Chief District Commander & Orchestrator</p>
+                </div>
+              </button>
+
+              <button onclick="selectChatThread('zone1')" id="thread-zone1" class="thread-item w-full text-left">
+                <div class="w-9 h-9 rounded-xl bg-cyan-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                  <i data-lucide="droplet" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-900 truncate">Zone 1 AI (Neer-Krishi)</h4>
+                    <span class="text-[10px] text-slate-400">Kamptee</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 truncate">Hydro-Agri & River Watch</p>
+                </div>
+              </button>
+
+              <button onclick="selectChatThread('zone2')" id="thread-zone2" class="thread-item w-full text-left">
+                <div class="w-9 h-9 rounded-xl bg-amber-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                  <i data-lucide="navigation" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-900 truncate">Zone 2 AI (Nagari-Tantra)</h4>
+                    <span class="text-[10px] text-slate-400">Urban Core</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 truncate">Sitabuldi Traffic & Waste Watch</p>
+                </div>
+              </button>
+
+              <button onclick="selectChatThread('zone3')" id="thread-zone3" class="thread-item w-full text-left">
+                <div class="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                  <i data-lucide="activity" class="w-5 h-5"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-900 truncate">Zone 3 AI (Swasthya-Raksha)</h4>
+                    <span class="text-[10px] text-slate-400">MIHAN/MIDC</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 truncate">Industrial Health & Ambulance Fleet</p>
+                </div>
+              </button>
+
+              <div class="pt-2 border-t border-slate-200">
+                <p class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2 px-1">Field Units & Citizens</p>
+                
+                <button onclick="selectChatThread('worker1')" id="thread-worker1" class="thread-item w-full text-left mb-1.5">
+                  <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                    <i data-lucide="user-check" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="font-bold text-xs text-slate-900 truncate">Worker 1 (U)</h4>
+                      <span class="text-[10px] text-emerald-600 font-bold">PATROL</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 truncate">Kamptee intake bridge watch</p>
+                  </div>
+                </button>
+
+                <button onclick="selectChatThread('worker2')" id="thread-worker2" class="thread-item w-full text-left mb-1.5">
+                  <div class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                    <i data-lucide="user-check" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="font-bold text-xs text-slate-900 truncate">Worker 2 (Ritesh)</h4>
+                      <span class="text-[10px] text-teal-600 font-bold">PATROL</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 truncate">Sitabuldi market drain #4</p>
+                  </div>
+                </button>
+
+                <button onclick="selectChatThread('citizen')" id="thread-citizen" class="thread-item w-full text-left">
+                  <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="font-bold text-xs text-slate-900 truncate">Dhynendra Gaurkar</h4>
+                      <span class="text-[10px] text-indigo-600 font-bold">CITIZEN</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 truncate">Zone 2 Citizen Telegram Line</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CENTER CONSOLE (MAIN CHAT AREA) -->
+          <div class="flex-1 flex flex-col min-w-0 bg-white">
+            
+            <!-- Chat Console Header -->
+            <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-white z-10 shadow-2xs">
+              <div class="flex items-center gap-3">
+                <div id="selected-thread-icon" class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                  <i data-lucide="shield" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 id="selected-thread-title" class="font-extrabold text-sm text-slate-900">Admin AI (Synth-Pradhan)</h3>
+                  <p id="selected-thread-subtitle" class="text-[11px] text-slate-500">District Orchestrator • Gemini 3.1 Flash Lite</p>
+                </div>
+              </div>
+
+              <!-- Action Chips Bar -->
+              <div class="flex items-center gap-1.5 overflow-x-auto">
+                <button onclick="triggerActionChip('dispatch_w1')" class="action-chip">
+                  <i data-lucide="zap" class="w-3.5 h-3.5 text-blue-600"></i> Dispatch Worker 1
+                </button>
+                <button onclick="triggerActionChip('dispatch_w2')" class="action-chip">
+                  <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-600"></i> Dispatch Worker 2
+                </button>
+                <button onclick="triggerActionChip('pending_tasks')" class="action-chip">
+                  <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-emerald-600"></i> Pending Tasks
+                </button>
+                <button onclick="triggerActionChip('evacuation')" class="action-chip border-red-300 text-red-700 bg-red-50 hover:bg-red-600 hover:text-white">
+                  <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Evacuation Alert
+                </button>
+              </div>
+            </div>
+
+            <!-- Messages Stream Area -->
+            <div id="ai-chat-history" class="flex-1 overflow-y-auto p-5 space-y-4 font-sans text-xs bg-slate-50/60">
+              <div class="chat-bubble-ai p-4 max-w-2xl border-l-4 border-l-blue-600">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-bold text-blue-700 text-xs flex items-center gap-1">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i> Admin AI (Synth-Pradhan)
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-mono">System Initialization</span>
+                </div>
+                <p class="text-xs text-slate-900 leading-relaxed font-semibold">Hello Admin! I've ingested all 5 Nagpur datasets (Town/Village Amenities, 102 Fleet, NFHS-5) and active Google Docs briefings. How can I assist you with city operations today?</p>
+              </div>
+            </div>
+
+            <!-- Hidden Target Persona Select for JS Compatibility -->
+            <select id="chat-persona-select" class="hidden">
+              <option value="admin">Admin AI</option>
+              <option value="zone1">Zone 1 AI</option>
+              <option value="zone2">Zone 2 AI</option>
+              <option value="zone3">Zone 3 AI</option>
+            </select>
+
+            <!-- Bottom Chat Form Bar -->
+            <form id="ai-chat-form" onsubmit="sendDirectAIChat(event)" class="p-3.5 border-t border-slate-200 flex items-center gap-3 bg-white shrink-0">
+              <input type="text" id="ai-chat-input" required placeholder="Type a message or instruction (e.g. 'send message to worker 1 to clean zone 1 area')..." class="flex-1 bg-slate-100 border border-slate-300 rounded-xl px-4 py-3 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium">
+              <button type="submit" class="py-3 px-6 btn-morphism-primary rounded-xl font-bold text-xs flex items-center gap-2 shadow-sm">
+                <i data-lucide="send" class="w-4 h-4"></i> Send Message
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================== -->
+      <!-- TAB 3: DOCUMENT & FILE NEWS INGEST TERMINAL (.DOC, .PDF, .TXT, .CSV) -->
+      <!-- ======================================================================== -->
+      <section id="tab-upload" class="tab-content hidden space-y-6">
+        <!-- 3 Zone Live Google Docs Briefings Grid -->
+        <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-2xs mb-4">
+          <div>
+            <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i> Live Google Docs News Briefings (40-Min Auto Sync)
+            </h3>
+            <p class="text-xs text-slate-500 font-medium">Docs auto-refresh every 40 mins. Click 'Refresh Docs Now' for instant live sync!</p>
+          </div>
+          <button onclick="refreshGoogleDocsNow()" class="py-2.5 px-4 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white border border-blue-200 font-extrabold text-xs transition flex items-center gap-2 shadow-2xs">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Docs Now
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Zone 1 Google Doc Briefing Card -->
+          <div class="glass-card p-5 border-t-4 border-t-cyan-600 bg-white">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-3">
+              <h4 class="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                <i data-lucide="droplets" class="w-4 h-4 text-cyan-600"></i> Zone 1: Neer-Krishi Document Briefing
+              </h4>
+              <a href="https://docs.google.com/document/d/11UXOyAbyGhIhegMV2bNhZy0SYJNiy0t4zuEl9QHnTt8/edit?usp=sharing" target="_blank" class="text-[10px] text-cyan-600 font-semibold hover:underline">Google Doc ↗</a>
+            </div>
+            <div id="news-summary-zone1" class="text-xs text-slate-700 leading-relaxed space-y-1 font-sans">
+              • <strong>Kanhan Hydrology:</strong> Water levels stable below alert threshold at Juni Kamptee barrage.<br/>
+              • <strong>Kharif Paddy Watch:</strong> Soil moisture optimal at 78%; pest advisory active.<br/>
+              • <strong>Kamptee Sanitation:</strong> Dredging active near Nag River bridge intake.
+            </div>
+          </div>
+
+          <!-- Zone 2 Google Doc Briefing Card -->
+          <div class="glass-card p-5 border-t-4 border-t-amber-600 bg-white">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-3">
+              <h4 class="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                <i data-lucide="navigation" class="w-4 h-4 text-amber-600"></i> Zone 2: Nagari-Tantra Document Briefing
+              </h4>
+              <a href="https://docs.google.com/document/d/1fo2hnkz4z6FVvRXOviorWFdYwLkAru8YojvmTenBIFY/edit?usp=sharing" target="_blank" class="text-[10px] text-amber-600 font-semibold hover:underline">Google Doc ↗</a>
+            </div>
+            <div id="news-summary-zone2" class="text-xs text-slate-700 leading-relaxed space-y-1 font-sans">
+              • <strong>Sitabuldi Traffic:</strong> Metro interchange traffic flow managed with signal synchronization.<br/>
+              • <strong>Open Plot Fines:</strong> NMC enforcement active on open plot dumping near Central Ave.<br/>
+              • <strong>Public Safety:</strong> Cyber safety crackdown active across Wardha Road.
+            </div>
+          </div>
+
+          <!-- Zone 3 Google Doc Briefing Card -->
+          <div class="glass-card p-5 border-t-4 border-t-purple-600 bg-white">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-200 mb-3">
+              <h4 class="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                <i data-lucide="heart-pulse" class="w-4 h-4 text-purple-600"></i> Zone 3: Swasthya-Raksha Document Briefing
+              </h4>
+              <a href="https://docs.google.com/document/d/1aE1sAMZj84afL4GTStQ6vTMMGrY8rpNfP-t_1TFAS6I/edit?usp=sharing" target="_blank" class="text-[10px] text-purple-600 font-semibold hover:underline">Google Doc ↗</a>
+            </div>
+            <div id="news-summary-zone3" class="text-xs text-slate-700 leading-relaxed space-y-1 font-sans">
+              • <strong>MIHAN Infrastructure:</strong> Resident petitions active for civic water tariff alignment.<br/>
+              • <strong>Ambazari Hydrology:</strong> Spillway normal; zero flood threat in Jaitala or Somalwada.<br/>
+              • <strong>102 Ambulance Fleet:</strong> 61 emergency units active with sub-6min response times.
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6 border-t-4 border-t-emerald-600 bg-white">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <i data-lucide="file-up" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-base text-slate-900">Document & File News Ingestion Terminal</h3>
+                <p class="text-xs text-slate-600">Upload or paste any report file (.txt, .csv, .doc, .pdf). Admin AI will process & summarize into zone memory!</p>
+              </div>
+            </div>
+          </div>
+
+          <form id="upload-news-form" onsubmit="uploadDocumentNews(event)" class="space-y-5">
+            <!-- Drag & Drop File Zone -->
+            <div class="upload-dropzone border-slate-300 bg-slate-50" onclick="document.getElementById('file-input').click()">
+              <i data-lucide="cloud-upload" class="w-10 h-10 text-emerald-600 mx-auto mb-2"></i>
+              <h4 class="font-bold text-sm text-slate-900">Click or Drag & Drop Report File Here</h4>
+              <p class="text-xs text-slate-600 mt-1">Supports .txt, .csv, .doc, .docx, .pdf, .json files</p>
+              <input type="file" id="file-input" class="hidden" onchange="handleFileSelect(event)">
+              <div id="file-name-display" class="text-xs font-mono text-emerald-700 mt-2"></div>
+            </div>
+
+            <!-- Text Paste Box -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-800 mb-1.5">Or Paste Raw Report / News Content Directly</label>
+              <textarea id="upload-text-input" rows="4" placeholder="Paste news report, citizen complaint, or official briefing text here..." class="w-full bg-white border border-slate-300 rounded-xl p-3.5 text-xs text-slate-900 focus:outline-none focus:border-emerald-600"></textarea>
+            </div>
+
+            <!-- Target Zone & Submit Button -->
+            <div class="flex items-center justify-between pt-2">
+              <div class="flex items-center gap-3">
+                <label class="text-xs font-semibold text-slate-800">Target Scope:</label>
+                <select id="upload-target-zone" class="bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-emerald-600 font-semibold">
+                  <option value="all">All Zones & Admin Dispatch</option>
+                  <option value="zone1">Zone 1 (Kamptee Hydro-Agri)</option>
+                  <option value="zone2">Zone 2 (Nagpur Urban Core)</option>
+                  <option value="zone3">Zone 3 (Hingna/MIDC)</option>
+                </select>
+              </div>
+
+              <button type="submit" class="py-2.5 px-6 btn-morphism-primary rounded-xl font-bold text-xs flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-emerald-200"></i>
+                Ingest & Process Document Directive
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ======================================================================== -->
+      <!-- TAB 4: AUTONOMOUS MULTI-AGENT AI DEBATE ROOM -->
+      <!-- ======================================================================== -->
+      <section id="tab-debate" class="tab-content hidden space-y-6">
+        <div class="glass-card p-6 border-t-4 border-t-purple-600 bg-white">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+                <i data-lucide="bot" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-base text-slate-900">Autonomous Multi-Agent AI Debate Room</h3>
+                <p class="text-xs text-slate-600">Zone 1, Zone 2, Zone 3 AIs & Admin AI debate conversationally on city telemetry</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button id="debate-toggle-btn" onclick="toggleDebateLoop()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-xl font-bold text-xs text-slate-800 flex items-center gap-2 transition">
+                <span id="debate-toggle-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                <span id="debate-toggle-text">Debate Loop: OFF</span>
+              </button>
+
+              <button onclick="triggerAutoAIDebate()" class="px-4 py-2 btn-morphism-primary rounded-xl font-bold text-xs flex items-center gap-2">
+                <i data-lucide="play" class="w-4 h-4"></i> Run 1 Debate Cycle
+              </button>
+            </div>
+          </div>
+
+          <div id="debate-stream" class="h-[500px] overflow-y-auto space-y-3.5 pr-2 font-sans text-xs">
+            <div class="text-center text-slate-500 py-12">Click 'Run 1 Debate Cycle' or toggle 'Debate Loop: ACTIVE' to initiate multi-agent AI discussion.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================== -->
+      <!-- TAB 5: DYNAMIC ANALYTICS DASHBOARD -->
+      <!-- ======================================================================== -->
+      <section id="tab-analytics" class="tab-content hidden space-y-6">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h3 class="font-extrabold text-lg text-slate-900">City Analytics Dashboard</h3>
+            <p class="text-xs text-slate-600 font-medium">Real-time metrics, zone risk levels, and fleet status</p>
+          </div>
+          <button onclick="renderAnalyticsCharts()" class="px-4 py-2 btn-morphism-primary rounded-xl font-bold text-xs flex items-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Refresh Charts
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="glass-card p-5 flex flex-col h-[320px] bg-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+              <h4 class="font-extrabold text-slate-900 text-xs flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4 text-amber-600"></i> Zone Risk & Vulnerability Index</h4>
+              <span class="text-[10px] text-slate-500 font-mono font-semibold">Bar Chart</span>
+            </div>
+            <div class="flex-1 relative"><canvas id="chart-zone-risks"></canvas></div>
+          </div>
+
+          <div class="glass-card p-5 flex flex-col h-[320px] bg-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+              <h4 class="font-extrabold text-slate-900 text-xs flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-emerald-600"></i> Emergency Fleet & Amenities</h4>
+              <span class="text-[10px] text-slate-500 font-mono font-semibold">Doughnut Chart</span>
+            </div>
+            <div class="flex-1 relative"><canvas id="chart-fleet-status"></canvas></div>
+          </div>
+
+          <div class="glass-card p-5 flex flex-col h-[320px] bg-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+              <h4 class="font-extrabold text-slate-900 text-xs flex items-center gap-2"><i data-lucide="building-2" class="w-4 h-4 text-cyan-600"></i> Municipal Dataset Ingestion</h4>
+              <span class="text-[10px] text-slate-500 font-mono font-semibold">Stacked Data</span>
+            </div>
+            <div class="flex-1 relative"><canvas id="chart-amenities"></canvas></div>
+          </div>
+
+          <div class="glass-card p-5 flex flex-col h-[320px] bg-white">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+              <h4 class="font-extrabold text-slate-900 text-xs flex items-center gap-2"><i data-lucide="line-chart" class="w-4 h-4 text-purple-600"></i> Telemetry & Discussion Volume</h4>
+              <span class="text-[10px] text-slate-500 font-mono font-semibold">Real-Time Trend</span>
+            </div>
+            <div class="flex-1 relative"><canvas id="chart-telemetry-trends"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================== -->
+      <!-- TAB 6: TELEGRAM & WORKER C2 (WHATSAPP WEB UI) -->
+      <!-- ======================================================================== -->
+      <section id="tab-comms" class="tab-content hidden space-y-6">
+        <div class="glass-card p-0 bg-white border border-slate-200/90 rounded-2xl overflow-hidden flex h-[680px] shadow-sm">
+          
+          <!-- LEFT SIDEBAR: TELEGRAM CONTACTS & WORKERS (w-80) -->
+          <div class="w-80 bg-slate-50/80 border-r border-slate-200/80 flex flex-col shrink-0">
+            <div class="p-4 border-b border-slate-200/80 flex items-center justify-between bg-white">
+              <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <i data-lucide="send" class="w-4 h-4 text-blue-600"></i> Telegram Dispatcher
+              </h3>
+              <span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2.5 py-0.5 rounded-full">Bot Connected</span>
+            </div>
+
+            <!-- Contacts List -->
+            <div class="p-3 space-y-2 flex-1 overflow-y-auto">
+              <button onclick="selectTelegramContact('worker1')" id="tg-contact-worker1" class="tg-contact-item active w-full text-left p-3 rounded-xl border border-blue-200 bg-blue-50/60 transition">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-extrabold text-xs shrink-0 shadow-2xs">
+                    👷
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="font-extrabold text-xs text-slate-900 truncate">Worker 1 (U)</h4>
+                      <span class="text-[10px] text-emerald-600 font-bold">ONLINE</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 truncate mt-0.5">Telegram ID: 8889864487 • Kamptee Patrol</p>
+                  </div>
+                </div>
+              </button>
+
+              <button onclick="selectTelegramContact('worker2')" id="tg-contact-worker2" class="tg-contact-item w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center font-extrabold text-xs shrink-0 shadow-2xs">
+                    👷
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="font-extrabold text-xs text-slate-900 truncate">Worker 2 (Ritesh Alone)</h4>
+                      <span class="text-[10px] text-teal-600 font-bold">STANDBY</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 truncate mt-0.5">Admin Line • Sitabuldi Drainage</p>
+                  </div>
+                </div>
+              </button>
+
+              <button onclick="selectTelegramContact('citizen')" id="tg-contact-citizen" class="tg-contact-item w-full text-left p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-extrabold text-xs shrink-0 shadow-2xs">
+                    👤
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between">
+                      <h4 class="font-extrabold text-xs text-slate-900 truncate">Dhynendra Gaurkar</h4>
+                      <span class="text-[10px] text-amber-600 font-bold">CITIZEN Z2</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 truncate mt-0.5">Telegram ID: 5760246204 • Direct Line</p>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <!-- Quick Emergency Alert Trigger -->
+            <div class="p-3 border-t border-slate-200/80 bg-white">
+              <button onclick="openEmergencyModal()" class="w-full py-2.5 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 font-extrabold text-xs transition flex items-center justify-center gap-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4"></i> Emergency Evacuation Alert
+              </button>
+            </div>
+          </div>
+
+          <!-- RIGHT CHAT PANEL (WhatsApp Web Style) -->
+          <div class="flex-1 flex flex-col min-w-0 bg-slate-50">
+            
+            <!-- Chat Header -->
+            <div class="p-3.5 px-5 bg-white border-b border-slate-200/80 flex items-center justify-between shrink-0 shadow-2xs">
+              <div class="flex items-center gap-3">
+                <div id="tg-chat-avatar" class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shadow-2xs">
+                  👷
+                </div>
+                <div>
+                  <h3 id="tg-chat-title" class="font-extrabold text-sm text-slate-900 leading-tight">Worker 1 (U)</h3>
+                  <p id="tg-chat-subtitle" class="text-[11px] font-semibold text-emerald-600 flex items-center gap-1.5 mt-0.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Telegram ID: 8889864487 • Kamptee Patrol Unit
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-extrabold flex items-center gap-1">
+                  <span class="tick-mark tick-blue">✓✓</span> Telegram Bot Sync
+                </span>
+              </div>
+            </div>
+
+            <!-- WhatsApp Background Messages Feed -->
+            <div id="tg-chat-messages-feed" class="flex-1 overflow-y-auto p-5 space-y-3.5 whatsapp-bg font-sans">
+              <!-- Live Chat Messages rendered dynamically -->
+            </div>
+
+            <!-- Quick Action Chips Bar -->
+            <div class="px-4 py-2 bg-white border-t border-slate-200/80 flex items-center gap-2 overflow-x-auto shrink-0 shadow-2xs">
+              <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Quick Directives:</span>
+              <button onclick="triggerTgChip('check_water')" class="action-chip text-xs">💧 Check Water Intake</button>
+              <button onclick="triggerTgChip('deploy_compactor')" class="action-chip text-xs">🚜 Deploy Compactor</button>
+              <button onclick="triggerTgChip('clean_heritage')" class="action-chip text-xs">🏛️ Clean Heritage Sites</button>
+              <button onclick="triggerTgChip('request_status')" class="action-chip text-xs">📋 Request Task Status</button>
+            </div>
+
+            <!-- Bottom Chat Input Bar -->
+            <form id="tg-direct-send-form" onsubmit="sendTgDirectMessage(event)" class="p-3.5 px-4 bg-white border-t border-slate-200/80 flex items-center gap-3 shrink-0">
+              <input type="text" id="tg-chat-input" required placeholder="Type directive message to send directly to Telegram..." class="flex-1 bg-slate-100 hover:bg-white focus:bg-white border border-slate-200 focus:border-blue-600 rounded-xl px-4 py-3 text-xs font-semibold text-slate-900 focus:outline-none transition shadow-inner">
+              <button type="submit" class="py-3 px-5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs transition shadow-md shadow-blue-500/20 flex items-center gap-2 shrink-0">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Send ✓✓</span>
+              </button>
+            </form>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================== -->
+      <!-- TAB 7: CITY MAP -->
+      <!-- ======================================================================== -->
+      <section id="tab-map" class="tab-content hidden space-y-6">
+        <div class="glass-card p-5 flex flex-col h-[650px] bg-white">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
+            <div class="flex items-center gap-3">
+              <i data-lucide="map" class="w-5 h-5 text-indigo-600"></i>
+              <h3 class="font-extrabold text-slate-900">Nagpur Interactive GIS Map</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs bg-cyan-100 text-cyan-800 border border-cyan-300 px-2.5 py-0.5 rounded-full font-bold">Zone 1: Neer-Krishi</span>
+              <span class="text-xs bg-amber-100 text-amber-800 border border-amber-300 px-2.5 py-0.5 rounded-full font-bold">Zone 2: Nagari-Tantra</span>
+              <span class="text-xs bg-purple-100 text-purple-800 border border-purple-300 px-2.5 py-0.5 rounded-full font-bold">Zone 3: Swasthya-Raksha</span>
+            </div>
+          </div>
+          <div id="full-map" class="w-full flex-1 rounded-xl overflow-hidden border border-slate-200 z-10"></div>
+        </div>
+      </section>
+
+      <!-- ======================================================================== -->
+      <!-- TAB 8: SYSTEM HEALTH -->
+      <!-- ======================================================================== -->
+      <section id="tab-diagnostics" class="tab-content hidden space-y-6">
+        <div class="glass-card p-6 border-t-4 border-t-emerald-600 bg-white">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                <i data-lucide="shield-check" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <h3 class="font-extrabold text-lg text-slate-900">System Health & Diagnostics</h3>
+                <p class="text-xs text-slate-600 font-medium">Verification of Telegram Bot, 6 API Keys, REST Server, and Model Cascade</p>
+              </div>
+            </div>
+            <button onclick="runDiagnosticsCheck()" class="px-5 py-2.5 btn-morphism-primary rounded-xl font-bold text-xs flex items-center gap-2">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i> Run Health Check
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-extrabold text-slate-900">Telegram Bot Listener</span>
+                <span id="diag-tg-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">ONLINE</span>
+              </div>
+              <p class="text-[11px] text-slate-600">Token: <span class="font-mono text-slate-800 font-semibold">8691301021:...</span></p>
+              <p class="text-[11px] text-slate-600 mt-1">Worker Dispatch: Active</p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-extrabold text-slate-900">Local REST API Server</span>
+                <span id="diag-api-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">ONLINE (200)</span>
+              </div>
+              <p class="text-[11px] text-slate-600">Endpoint: <span class="font-mono text-slate-800 font-semibold">http://localhost:8000</span></p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-extrabold text-slate-900">Active Model Cascade</span>
+                <span id="diag-model-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-300">Gemini 3.1 Flash</span>
+              </div>
+              <p class="text-[11px] text-slate-600">Cascade: Gemini 3.1 Flash Lite $\rightarrow$ Gemma 4 $\rightarrow$ 3.6 Flash</p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-cyan-700">Zone 1 AI Key</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">200 OK</span></div>
+              <p class="text-[11px] font-mono text-slate-600">KEY_ZONE1_ROTATOR... (Verified)</p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-amber-700">Zone 2 AI Key</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">200 OK</span></div>
+              <p class="text-[11px] font-mono text-slate-600">KEY_ZONE2_ROTATOR... (Verified)</p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-purple-700">Zone 3 AI Key</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">200 OK</span></div>
+              <p class="text-[11px] font-mono text-slate-600">KEY_ZONE3_ROTATOR... (Verified)</p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-blue-700">Admin AI Key</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">200 OK</span></div>
+              <p class="text-[11px] font-mono text-slate-600">KEY_ADMIN_ROTATOR... (Verified)</p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-slate-700">Backup 1 Key</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">200 OK</span></div>
+              <p class="text-[11px] font-mono text-slate-600">KEY_BACKUP1_ROTATOR... (Verified)</p>
+            </div>
+
+            <div class="glass-card-sm p-4 border border-slate-200 bg-white">
+              <div class="flex items-center justify-between mb-2"><span class="text-xs font-bold text-slate-700">Backup 2 Key</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">200 OK</span></div>
+              <p class="text-[11px] font-mono text-slate-600">KEY_BACKUP2_ROTATOR... (Verified)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+
+  <!-- ============================================================================== -->
+  <!-- 3. INTERACTIVE GLASSMORPHISM MODAL DIALOGS -->
+  <!-- ============================================================================== -->
+
+  <!-- MODAL 1: QUICK DISPATCH MODAL -->
+  <div id="dispatch-modal" class="modal-backdrop">
+    <div class="modal-dialog p-6">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+            <i data-lucide="send" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-slate-900">Quick Worker Dispatch</h3>
+            <p class="text-xs text-slate-600">Send an instant directive message directly to Telegram</p>
+          </div>
+        </div>
+        <button onclick="closeDispatchModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="submitModalDispatch(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1.5">Target Field Unit</label>
+          <select id="modal-dispatch-target" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 font-bold">
+            <option value="worker1">Worker 1 ("U" - 8889864487)</option>
+            <option value="worker2">Worker 2 ("Ritesh Alone" - Admin)</option>
+            <option value="citizen">Citizen Z2 ("Dhynendra Gaurkar" - 5760246204)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-800 mb-1.5">Directive Message</label>
+          <textarea id="modal-dispatch-text" rows="3" required placeholder="Enter instruction (e.g. 'Please inspect Kamptee river barrage water level')..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 font-medium focus:outline-none focus:border-blue-600"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button type="button" onclick="closeDispatchModal()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition">
+            Cancel
+          </button>
+          <button type="submit" class="py-2.5 px-6 btn-morphism-primary rounded-xl font-extrabold text-xs flex items-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> Dispatch Telegram Message
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: EMERGENCY ALERT MODAL -->
+  <div id="emergency-modal" class="modal-backdrop">
+    <div class="modal-dialog p-6 border-2 border-red-500">
+      <div class="flex items-center justify-between pb-4 border-b border-red-100 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center text-red-600 font-bold">
+            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-red-700">🚨 Emergency Evacuation Alert</h3>
+            <p class="text-xs text-slate-600">Broadcast immediate evacuation protocol to all Telegram units</p>
+          </div>
+        </div>
+        <button onclick="closeEmergencyModal()" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <p class="text-xs text-slate-700 leading-relaxed font-medium">
+          This action will immediately send high-priority <strong>EMERGENCY EVACUATION ALERTS</strong> to Worker 1 (U), Worker 2 (Ritesh), and Citizen Dhynendra via Telegram API.
+        </p>
+
+        <div class="bg-red-50 border border-red-200 p-3.5 rounded-xl text-xs text-red-800 space-y-1 font-mono">
+          <div class="font-bold text-red-900">🚨 Broadcast Message:</div>
+          <div>"EMERGENCY EVACUATION ALERT: Admin directive issued. Initiate immediate emergency protocol in your sector."</div>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button type="button" onclick="closeEmergencyModal()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition">
+            Cancel
+          </button>
+          <button type="button" onclick="triggerEmergencyEvacuationModal()" class="py-2.5 px-6 bg-red-600 hover:bg-red-700 text-white rounded-xl font-extrabold text-xs flex items-center gap-2 shadow-md shadow-red-600/20 transition">
+            <i data-lucide="zap" class="w-4 h-4"></i> Broadcast Emergency Alert Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SynthCity Nagpur - Complete Technical Setup Manual & System Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .glass-box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 1rem;
+    }
+    .code-block {
+      background: #090d16;
+      border: 1px solid #1e293b;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.825rem;
+      overflow-x: auto;
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 space-y-6">
+
+  <!-- Header Section -->
+  <header class="glass-box p-6 flex flex-col md:flex-row items-center justify-between gap-4 border-purple-500/30">
+    <div class="flex items-center space-x-4">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-sky-500 flex items-center justify-center text-3xl shadow-lg shadow-purple-500/30">
+        📘
+      </div>
+      <div>
+        <h1 class="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-300 via-indigo-200 to-sky-300">
+          PROJECT SYNTHCITY NAGPUR
+        </h1>
+        <p class="text-xs text-slate-400 font-mono">COMPLETE TECHNICAL SETUP MANUAL, API KEYS, HARDWARE SCHEMATICS & DOWNLOAD HUB</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition shadow-lg flex items-center gap-1.5">
+        <span>⬅️ Open Main Dashboard</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Download Hub Bar -->
+  <section class="glass-box p-5 space-y-3 border-sky-500/30">
+    <div class="flex items-center justify-between border-b border-white/10 pb-2">
+      <h2 class="text-sm font-extrabold text-sky-300 flex items-center gap-2">
+        <span>📥 SINGLE-CLICK SYSTEM RESOURCE DOWNLOAD HUB</span>
+      </h2>
+      <span class="text-[10px] font-mono text-slate-400">All scripts, sketches, documentation & schemas available below</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+      <a href="setup_manual.md" download="setup_manual.md" class="glass-box p-3 hover:bg-purple-500/20 transition flex items-center space-x-3 border-purple-400/40">
+        <span class="text-2xl">📄</span>
+        <div>
+          <strong class="text-white block font-bold">setup_manual.md</strong>
+          <span class="text-[10px] text-slate-400">Full Setup Manual (Markdown)</span>
+        </div>
+      </a>
+      <a href="esp01_flood_sensor.ino" download="esp01_flood_sensor.ino" class="glass-box p-3 hover:bg-sky-500/20 transition flex items-center space-x-3 border-sky-400/40">
+        <span class="text-2xl">📡</span>
+        <div>
+          <strong class="text-white block font-bold">esp01_flood_sensor.ino</strong>
+          <span class="text-[10px] text-slate-400">ESP-01 Arduino C++ Code</span>
+        </div>
+      </a>
+      <a href="PROJECT_DOCUMENTATION.md" download="PROJECT_DOCUMENTATION.md" class="glass-box p-3 hover:bg-indigo-500/20 transition flex items-center space-x-3 border-indigo-400/40">
+        <span class="text-2xl">📑</span>
+        <div>
+          <strong class="text-white block font-bold">PROJECT_DOCS.md</strong>
+          <span class="text-[10px] text-slate-400">System Architecture Docs (10 KB)</span>
+        </div>
+      </a>
+      <a href="firebase_schema.json" download="firebase_schema.json" class="glass-box p-3 hover:bg-emerald-500/20 transition flex items-center space-x-3 border-emerald-400/40">
+        <span class="text-2xl">🔥</span>
+        <div>
+          <strong class="text-white block font-bold">firebase_schema.json</strong>
+          <span class="text-[10px] text-slate-400">Realtime DB Rules & Schema</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 6 AI Agents Hierarchy -->
+  <section class="glass-box p-6 space-y-4">
+    <h2 class="text-base font-extrabold text-purple-300 flex items-center gap-2">
+      <span>🧠 6-AI AGENT MULTI-TIER ARCHITECTURE & ROLES</span>
+    </h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs border-collapse">
+        <thead>
+          <tr class="border-b border-white/10 text-purple-300 font-mono">
+            <th class="p-2">Agent Name</th>
+            <th class="p-2">Role & Specialization</th>
+            <th class="p-2">Tier & Domain</th>
+            <th class="p-2">Key Directives & Capabilities</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5 font-mono text-[11px] text-slate-300">
+          <tr>
+            <td class="p-2 font-bold text-amber-300">👑 Synth-Pradhan</td>
+            <td class="p-2">District Orchestrator & Executive Command</td>
+            <td class="p-2">Tier 1 (Admin AI Liaison)</td>
+            <td class="p-2">Issues municipal executive orders, approves dispatches, sends WhatsApp alerts to Admin.</td>
+          </tr>
+          <tr>
+            <td class="p-2 font-bold text-sky-300">💧 Neer-Krishi</td>
+            <td class="p-2">Zone 1 Hydro-Agri Core</td>
+            <td class="p-2">Tier 2 (Zone AI 1)</td>
+            <td class="p-2">Monitors Nag River surge, Godhani farmlands, ESP-01 sensor, requests dewatering pumps.</td>
+          </tr>
+          <tr>
+            <td class="p-2 font-bold text-indigo-300">🏙️ Nagari-Tantra</td>
+            <td class="p-2">Zone 2 Urban Infrastructure</td>
+            <td class="p-2">Tier 2 (Zone AI 2)</td>
+            <td class="p-2">Manages Sitabuldi market traffic, garbage queues, stormwater culverts, and detours.</td>
+          </tr>
+          <tr>
+            <td class="p-2 font-bold text-emerald-300">🏥 Swasthya-Raksha</td>
+            <td class="p-2">Zone 3 Health & Sanitation</td>
+            <td class="p-2">Tier 2 (Zone AI 3)</td>
+            <td class="p-2">Oversees Hingna MIDC stagnant runoff, dengue breeding risks, fogging squads, triage.</td>
+          </tr>
+          <tr>
+            <td class="p-2 font-bold text-pink-300">📡 Data-Mitra</td>
+            <td class="p-2">Data Ingestion & Weather Telemetry</td>
+            <td class="p-2">Tier 3 (Backup / Internal AI 1)</td>
+            <td class="p-2">Ingests Open-Meteo weather API forecasts, Google News RSS feeds, PDF/URL knowledge documents.</td>
+          </tr>
+          <tr>
+            <td class="p-2 font-bold text-purple-300">🔄 Marg-Darshak</td>
+            <td class="p-2">Route & Logistics Optimizer</td>
+            <td class="p-2">Tier 3 (Backup / Internal AI 2)</td>
+            <td class="p-2">Calculates Outer Ring Road bypass routes, pump transfer ETAs, and emergency squad routing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Hardware Setup Guide for ESP-01 -->
+  <section class="glass-box p-6 space-y-4">
+    <h2 class="text-base font-extrabold text-sky-300 flex items-center gap-2">
+      <span>📡 ESP-01 ULTRASONIC FLOOD SENSOR HARDWARE SETUP</span>
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+      <div class="space-y-2">
+        <h3 class="font-bold text-purple-200">Hardware Requirements:</h3>
+        <ul class="list-disc pl-5 text-slate-300 space-y-1 font-mono text-[11px]">
+          <td>ESP8266 ESP-01 Microcontroller Module</td>
+          <td>HC-SR04 Ultrasonic Distance Sensor</td>
+          <td>3.3V Power Supply / Regulator</td>
+          <td>Jumper Wires & Breadboard</td>
+        </ul>
+        <h3 class="font-bold text-purple-200 pt-2">Wiring Connections:</h3>
+        <div class="code-block text-[11px]">
+ESP-01 GPIO0  --> HC-SR04 TRIG
+ESP-01 GPIO2  --> HC-SR04 ECHO
+ESP-01 VCC    --> 3.3V Power
+ESP-01 CH_PD  --> 3.3V Power
+ESP-01 GND    --> Common Ground
+        </div>
+      </div>
+      <div class="space-y-2">
+        <h3 class="font-bold text-purple-200">Arduino C++ Code Snippet (`esp01_flood_sensor.ino`):</h3>
+        <pre class="code-block text-[10px] h-48 overflow-y-auto">
+#include &lt;ESP8266WiFi.h&gt;
+#include &lt;ESP8266HTTPClient.h&gt;
+
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+const char* firebaseUrl = "https://my-project-1-602b7-default-rtdb.firebaseio.com/telemetry/esp01_flood.json";
+
+const int TRIG_PIN = 0; // GPIO0
+const int ECHO_PIN = 2; // GPIO2
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  WiFi.begin(ssid, password);
+}
+
+void loop() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  float distanceCm = duration * 0.0343 / 2.0;
+
+  // Send payload to SynthCity Firebase
+  delay(5000);
+}
+        </pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Telegram & WhatsApp API Setup Guide -->
+  <section class="glass-box p-6 space-y-4">
+    <h2 class="text-base font-extrabold text-emerald-300 flex items-center gap-2">
+      <span>📱 TELEGRAM BOT & WHATSAPP TEST NUMBER INTEGRATION</span>
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+      <div class="bg-slate-900/60 p-4 rounded-xl border border-emerald-500/20 space-y-2">
+        <h3 class="font-bold text-emerald-400 text-sm">💬 Telegram Citizen Reporting Channel</h3>
+        <p class="text-[11px] text-slate-300">Allows common citizens and workers to send issue reports directly to the AI agents.</p>
+        <div class="text-[10px] text-slate-400 space-y-1">
+          <div>• Bot Username: <span class="text-sky-300">@SynthCityNagpurBot</span></div>
+          <div>• Configured Webhook: <span class="text-sky-300">https://my-project-1-602b7-default-rtdb.firebaseio.com/telegram_webhooks.json</span></div>
+          <div>• Automated Reaction: Geocodes location (e.g. Raisoni, Sitabuldi), saves issue to Firebase, alerts Admin if urgent.</div>
+        </div>
+      </div>
+      <div class="bg-slate-900/60 p-4 rounded-xl border border-purple-500/20 space-y-2">
+        <h3 class="font-bold text-purple-400 text-sm">📱 WhatsApp Admin Emergency Alert API</h3>
+        <p class="text-[11px] text-slate-300">Dispatches real-time SMS / WhatsApp emergency alerts to Admin test phone on urgent issues.</p>
+        <div class="text-[10px] text-slate-400 space-y-1">
+          <div>• Admin Phone: <span class="text-purple-300">+91 98230 44120</span></div>
+          <div>• Sandbox Join Code: <span class="text-purple-300">join synthcity-nagpur</span></div>
+          <div>• Triggers: High-priority flood alerts, emergency squad dispatches, citizen emergency escalations.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

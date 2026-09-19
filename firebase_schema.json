@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SynthCity Firebase Realtime Database Schema",
+  "description": "Schema structure for Nagpur Multi-Agent Civic Intelligence Platform",
+  "type": "object",
+  "properties": {
+    "chat": {
+      "type": "object",
+      "description": "Live multi-agent neural chat messages",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "timestamp": { "type": "number" },
+            "timeStr": { "type": "string" },
+            "sender": { "type": "string" },
+            "role": { "type": "string" },
+            "zone": { "type": "string" },
+            "message": { "type": "string" },
+            "color": { "type": "string" },
+            "icon": { "type": "string" }
+          },
+          "required": ["timestamp", "sender", "message"]
+        }
+      }
+    },
+    "alerts": {
+      "type": "object",
+      "description": "District-wide emergency alerts issued by Admin AI Synth-Pradhan",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "title": { "type": "string" },
+            "severity": { "type": "string", "enum": ["CRITICAL", "WARNING", "INFO"] },
+            "zone": { "type": "string" },
+            "description": { "type": "string" },
+            "actionRequired": { "type": "string" },
+            "timestamp": { "type": "number" }
+          }
+        }
+      }
+    },
+    "map_markers": {
+      "type": "object",
+      "description": "Pulsing map markers drawn on Leaflet map over Nagpur",
+      "patternProperties": {
+        "^[a-zA-Z0-9_-]+$": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "lat": { "type": "number" },
+            "lng": { "type": "number" },
+            "title": { "type": "string" },
+            "zone": { "type": "string" },
+            "severity": { "type": "string" },
+            "type": { "type": "string" },
+            "description": { "type": "string" },
+            "pulse": { "type": "boolean" },
+            "timestamp": { "type": "number" }
+          }
+        }
+      }
+    },
+    "zone_status": {
+      "type": "object",
+      "properties": {
+        "zone1": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "default": "Zone 1: Neer-Krishi" },
+            "status": { "type": "string" },
+            "waterLevel": { "type": "string" },
+            "soilMoisture": { "type": "string" },
+            "riskLevel": { "type": "string" }
+          }
+        },
+        "zone2": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "default": "Zone 2: Nagari-Tantra" },
+            "status": { "type": "string" },
+            "trafficCongestion": { "type": "string" },
+            "wasteQueue": { "type": "string" },
+            "riskLevel": { "type": "string" }
+          }
+        },
+        "zone3": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "default": "Zone 3: Swasthya-Raksha" },
+            "status": { "type": "string" },
+            "airQualityIndex": { "type": "number" },
+            "dengueVectorRisk": { "type": "string" },
+            "riskLevel": { "type": "string" }
+          }
+        }
+      }
+    },
+    "system_memory": {
+      "type": "object",
+      "properties": {
+        "lastUpdated": { "type": "string" },
+        "weather": {
+          "type": "object",
+          "properties": {
+            "temp": { "type": "number" },
+            "humidity": { "type": "number" },
+            "precipitation": { "type": "number" },
+            "windSpeed": { "type": "number" },
+            "summary": { "type": "string" }
+          }
+        },
+        "driveReports": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "adminPrediction": { "type": "string" }
+      }
+    },
+    "disaster_trigger": {
+      "type": "object",
+      "properties": {
+        "active": { "type": "boolean" },
+        "type": { "type": "string" },
+        "zone": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "number" }
+      }
+    }
+  }
+}
