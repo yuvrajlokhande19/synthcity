@@ -266,3 +266,6 @@ python backend.py
 
 Designed & Developed with ❤️ for **Nagpur Metropolitan Region** and Civic Tech Innovation.  
 Licensed under the [MIT License](LICENSE).
+ 
+- **Status:** Complete
+
