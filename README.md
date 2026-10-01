@@ -131,7 +131,7 @@ flowchart TD
 
 SynthCity integrates live hydrological telemetry using the **ESP32 Microcontroller** and an **HC-SR04 Ultrasonic Distance Sensor** installed on bridge embankments (e.g. Nag River Kamptee Bridge intake):
 
-### Hardware Wiring Pinouts
+### Hardware Wiring Pinouts 
 
 | Component Pin | ESP32 GPIO | Description | Voltage Rating |
 | :--- | :--- | :--- | :--- |
